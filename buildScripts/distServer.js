@@ -1,20 +1,23 @@
 import express from 'express';
 import path from 'path';
 import open from 'open';
-import webpack from 'webpack';
-import config from '../webpack.config.dev';
+import compression from 'compression';
 
 /* eslint-disable no-console */
 
 const port = 3001;
 const app = express(); // create instance of express
-const compiler = webpack(config);
 
-//integrate webpack with express
-app.use(require('webpack-dev-middleware')(compiler, {
-    noInfo: true,
-    publicPath: config.output.publicPath
-}));
+/* This is NOT for actual production use. 
+    This is just useful for hosting the minified prodiction build 
+    for local debugging purposes 
+*/
+app.use(compression()) // enable gzip compression
+app.use(express.static('dist')); // enable the express web server
+
+app.get('/', function(req, res) {
+    res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
 
 app.get('/users', function(req, res) {
     // Hard coding for simplicity. pretend this hits a real database
@@ -23,10 +26,6 @@ app.get('/users', function(req, res) {
         {"id": 2, "firstName":"Tammy", "lastName": "Norton", "email": "tnorton@gmail.com"},
         {"id": 3, "firstName":"Tina", "lastName": "Lee", "email": "lee.tina@gmail.com"},
     ]);
-});
-
-app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname, '../src/index.html'));
 });
 
 app.listen(port, function (err) {
