@@ -1,7 +1,7 @@
 export default function getBaseUrl(){
     // const inDevelopment = window.location.hostname === 'localhost';
     // return inDevelopment ? 'http://localhost:3002/' : '/';
-    return getQueryStringParameterByName('useMockApi') ? 'http://localhost:3002/' : '/';
+    return getQueryStringParameterByName('useMockApi') ? 'http://localhost:3002/' : 'https://quiet-island-84238.herokuapp.com/';
 }
 
 function getQueryStringParameterByName(name, url){
